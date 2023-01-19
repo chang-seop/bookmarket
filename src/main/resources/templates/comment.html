@@ -6,7 +6,13 @@
 <body>
 
     <section>
-        <h2>게시글입니다.</h2>
+        <div class="card w-75 p-3" style="float: none; margin:0 auto;" th:each="comment : ${comments}">
+            <h5 class="card-header" th:text="${comment.title}">Featured</h5>
+            <div class="card-body">
+                <h5 class="card-title" th:text="${comment.description}">Special title treatment</h5>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
     </section>
 
 </body>
