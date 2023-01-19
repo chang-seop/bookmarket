@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section}, ~{::link})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>comment</title>
+    <link th:href="@{/css/comment.css}" rel="stylesheet">
 </head>
 <body>
 
     <section>
-        <div class="card w-75 p-3" style="float: none; margin:0 auto;" th:each="comment : ${comments}">
-            <h5 class="card-header" th:text="${comment.title}">Featured</h5>
+        <div class="card w-75 p-3 cardComment" style="float: none; margin:0 auto;" th:each="comment : ${comments}">
+            <a th:href="@{/comments/{commentId}(commentId=${comment.id})}" style="text-decoration: none;" class="text-muted">
+                <h5 class="card-header" th:text="${comment.title}">Featured</h5>
+            </a>
             <div class="card-body">
                 <h5 class="card-title" th:text="${comment.description}">Special title treatment</h5>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
         </div>
     </section>

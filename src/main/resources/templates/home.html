@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section}, ~{::link})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>home</title>
+    <link th:href="@{/css/home.css}" rel="stylesheet">
 </head>
 <body>
 
