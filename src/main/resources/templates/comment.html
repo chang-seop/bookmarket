@@ -6,10 +6,10 @@
 </head>
 <body>
 
-    <section>
-        <div class="card w-75 p-3 cardComment" style="float: none; margin:0 auto;" th:each="comment : ${comments}">
+    <section class="media-min">
+        <div class="card p-3 cardComment mx-auto my-3" style="float: none;" th:each="comment : ${comments}">
             <a th:href="@{/comments/{commentId}(commentId=${comment.id})}" style="text-decoration: none;" class="text-muted">
-                <h5 class="card-header" th:text="${comment.title}">Featured</h5>
+                <span class="card-header header-span" th:text="${comment.title}">Featured</span>
             </a>
             <div class="card-body">
                 <h5 class="card-title" th:text="${comment.description}">Special title treatment</h5>
