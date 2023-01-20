@@ -1,5 +1,6 @@
 package changseop.core.common.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ public class CommentDto {
     private String description;
 
 
+    @Builder
     public CommentDto(Long id, String title, String description) {
         this.id = id;
         this.title = title;
