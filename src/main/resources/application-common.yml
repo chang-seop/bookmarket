@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: common
+
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 10MB
+
+# Session
+server:
+  servlet:
+    session:
+      timeout: 1800
