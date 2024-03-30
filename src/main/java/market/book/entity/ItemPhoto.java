@@ -9,18 +9,19 @@ import market.book.entity.common.BaseTimeEntity;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookPhoto extends BaseTimeEntity {
+public class ItemPhoto extends BaseTimeEntity {
     @Id @GeneratedValue
-    @Column(name = "BOOK_PHOTO_ID")
+    @Column(name = "ITEM_PHOTO_ID")
     private Long id;
     private String imageUrl;
-
+    private Boolean imageMainYn;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOOK_ID")
-    private Book book;
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
 
-    public BookPhoto(String imageUrl, Book book) {
+    public ItemPhoto(String imageUrl, Boolean imageMainYn, Item item) {
         this.imageUrl = imageUrl;
-        this.book = book;
+        this.imageMainYn = imageMainYn;
+        this.item = item;
     }
 }

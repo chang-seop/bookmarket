@@ -19,11 +19,11 @@ public class OrderBook extends BaseTimeEntity {
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOOK_ID")
-    private Book book;
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
 
-    public OrderBook(Order order, Book book) {
+    public OrderBook(Order order, Item item) {
         this.order = order;
-        this.book = book;
+        this.item = item;
     }
 }

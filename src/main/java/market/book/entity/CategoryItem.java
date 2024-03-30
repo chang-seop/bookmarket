@@ -9,9 +9,9 @@ import market.book.entity.common.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CategoryBook extends BaseTimeEntity {
+public class CategoryItem extends BaseTimeEntity {
     @Id @GeneratedValue
-    @Column(name = "CATEGORY_BOOK_ID")
+    @Column(name = "CATEGORY_ITEM_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -19,11 +19,11 @@ public class CategoryBook extends BaseTimeEntity {
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOOK_ID")
-    private Book book;
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
 
-    public CategoryBook(Category category, Book book) {
+    public CategoryItem(Category category, Item item) {
         this.category = category;
-        this.book = book;
+        this.item = item;
     }
 }

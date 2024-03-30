@@ -9,9 +9,9 @@ import market.book.entity.common.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Book extends BaseTimeEntity {
+public class Item extends BaseTimeEntity {
     @Id @GeneratedValue
-    @Column(name = "BOOK_ID")
+    @Column(name = "ITEM_ID")
     private Long id;
     private String isbn; // ISBN
     private String name; // 책 이름
@@ -21,7 +21,7 @@ public class Book extends BaseTimeEntity {
     private Integer quantity; // 재고 수량
     private Integer price; // 가격
 
-    public Book(String isbn, String name, String introduction, String author, String contents, Integer quantity, Integer price) {
+    public Item(String isbn, String name, String introduction, String author, String contents, Integer quantity, Integer price) {
         this.isbn = isbn;
         this.name = name;
         this.introduction = introduction;
