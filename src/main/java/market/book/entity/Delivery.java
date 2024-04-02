@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.book.entity.common.Address;
 import market.book.entity.common.BaseTimeEntity;
+import market.book.entity.type.DeliveryType;
 
 @Getter
 @Entity
@@ -17,10 +18,12 @@ public class Delivery extends BaseTimeEntity {
 
     @Embedded
     private Address address;
-    private String status;
 
-    public Delivery(Address address, String status) {
+    @Enumerated(EnumType.STRING)
+    private DeliveryType type;
+
+    public Delivery(Address address, DeliveryType type) {
         this.address = address;
-        this.status = status;
+        this.type = type;
     }
 }

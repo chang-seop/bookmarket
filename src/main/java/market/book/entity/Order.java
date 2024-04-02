@@ -23,8 +23,13 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "DELIVERY_ID")
     private Delivery delivery;
 
-    public Order(Member member, Delivery delivery) {
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PAYMENT_ID")
+    private Payment payment;
+
+    public Order(Member member, Delivery delivery, Payment payment) {
         this.member = member;
         this.delivery = delivery;
+        this.payment = payment;
     }
 }
