@@ -24,11 +24,14 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private Address address;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "PROFILE_ID")
+    // 라이프 사이클이 소유자인 member 에 의존
     private Profile profile;
 
-    @OneToMany(mappedBy = "member")
+    // 라이프 사이클이 소유자인 member 에 의존
+    // orphanRemoval = true : 부모 엔티티가 삭제되면 자식 엔티티도 함께 삭제
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Authority> authorityList = new ArrayList<>();
 
     public Member(String username, String email, String nickname, String password, Address address, Profile profile) {
@@ -40,9 +43,10 @@ public class Member extends BaseTimeEntity {
         this.profile = profile;
     }
 
+    // 멤버가 authority 를 관리
     // 연관관계 편의 메서드
     public void addAuthority(Authority authority) {
-        this.authorityList.add(authority);
-        authority.changeMember(this);
+        authorityList.add(authority);
+        authority.setMember(this);
     }
 }

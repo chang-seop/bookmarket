@@ -22,12 +22,11 @@ public class Authority extends BaseTimeEntity {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    public Authority(RoleType role, Member member) {
+    public Authority(RoleType role) {
         this.role = role;
-        this.member = member;
     }
 
-    public void changeMember(Member member) {
+    public void setMember(Member member) {
         this.member = member;
     }
 }

@@ -8,15 +8,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
     private String zoneCode;
-    private String jibunAddress;
-    private String roadAddress;
+    private String subAddress;
     private String detailedAddress;
 
     @Builder
-    public Address(String zoneCode, String jibunAddress, String roadAddress, String detailedAddress) {
+    public Address(String zoneCode, String subAddress, String detailedAddress) {
         this.zoneCode = zoneCode;
-        this.jibunAddress = jibunAddress;
-        this.roadAddress = roadAddress;
+        this.subAddress = subAddress;
         this.detailedAddress = detailedAddress;
     }
 }
