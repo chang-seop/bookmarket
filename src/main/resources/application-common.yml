@@ -8,8 +8,24 @@ spring:
       maxFileSize: 10MB
       maxRequestSize: 10MB
 
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+
 # Session
 server:
   servlet:
     session:
+      path: /
+      name: JSESSIONID
+      http-only: true
       timeout: 1800
+
+logging:
+  level:
+    market:
+      book: trace
+
+security:
+  allowed-uris: /, /members/login-view, /members/login, /members/signup, /members/signup-view
