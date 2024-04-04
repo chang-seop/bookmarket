@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html th:fragment="homeLayout (title, sections, links)" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="homeLayout (title, section)"
+      lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,22 +11,18 @@
     <script src="/resources/javascript/bootstrap.bundle.min.js" async></script>
     <title th:replace="${title}">extendLayout</title>
     <link rel="stylesheet" href="/resources/css/layouts/homeLayout.css">
-    <th:block th:replace="${links}"></th:block>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <!--/* header 부분 */-->
     <header>
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#" th:href="@{/}">SeeYa</a>
-
-                <!--/* 로그인 버튼 */-->
-                <a class="navbar-brand nav-login" th:href="@{/members/login}" th:if="${session.data eq null}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
-                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
-                    </svg>
-                </a>
-
+                <a class="navbar-brand" href="#" th:href="@{/}">마켓</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -35,10 +34,19 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#" th:href="@{/}">Home</a>
+                                <a class="nav-link active" aria-current="page" href="#" th:href="@{/}">메인</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" th:href="@{/comments}">Comment</a>
+                                <a class="nav-link" href="#" sec:authorize="isAnonymous()" th:href="@{/members/login-view}">로그인</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" sec:authorize="isAnonymous()" th:href="@{/members/signup-view}">회원가입</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" sec:authorize="isAuthenticated()" th:href="@{/members/logout}">로그아웃</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/members/admin}">어드민</a>
                             </li>
                         </ul>
                     </div>
@@ -49,7 +57,7 @@
 
 
     <!--/* 콘텐츠(section) 부분 */-->
-    <section th:replace="${sections}"></section>
+    <section th:replace="${section}"></section>
 
 
     <!--/* footer 부분 */-->
