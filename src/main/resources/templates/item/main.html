@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>책 스토어</title>
+</head>
+<body>
+
+<section>
+    <div class="container">
+        <div class="d-flex justify-content-center card p-3 my-4 bg-light border">
+            <div class="d-flex justify-content-end my-2" >
+                <a class="btn btn-dark my-2" style="width: 10rem;" th:href="@{/items/add}">책 등록</a>
+            </div>
+
+
+            <div class="d-flex justify-content-center flex-wrap my-2" >
+                <!-- 책 상품 -->
+                <div class="card my-2 mx-2" th:each="item : ${list}" style="width: 18rem">
+                    <th:block th:each="photoDto : ${item?.itemPhotoDtoList}">
+                        <img class="card-img-top" th:if="${photoDto?.imageMainYn}"
+                             th:src="@{/items/images/{param}(param=${photoDto.imageUrl})}"
+                             alt="image cap">
+                    </th:block>
+                    <div class="card-body">
+                        <p class="card-text" th:text="${item.name}"></p>
+                        <p class="card-text" th:text="${item.author}"></p>
+                        <p class="card-text" data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${!list.isEmpty()}">
+                <ul class="pagination pagination-sm justify-content-center"
+                    th:with="
+                        pageNumber = ${list.pageable.pageNumber},
+                        pageSize = ${list.pageable.pageSize},
+                        totalPage = ${list.totalPages},
+                        startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                        tempEndPage = ${startPage + pageSize - 1},
+                        endPage = (${tempEndPage < totalPage ? tempEndPage : totalPage})">
+
+                    <!-- 처음 페이지 -->
+                    <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${list.first} ? '#' : @{/items(page=${startPage})}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- 이전 페이지 -->
+                    <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${list.first} ? '#' : @{/items(page=${pageNumber - 1})}">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+
+                    <!-- 1, 2, 3 ... 페이지 -->
+                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                        th:classappend="${page == pageNumber + 1} ? 'active'"
+                        class="page-item">
+                        <a th:text="${page}" class="page-link" th:href="@{/items(page=${page - 1})}"></a>
+                    </li>
+
+                    <!-- 다음 페이지 -->
+                    <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${list.last} ? '#' : @{/items(page=${pageNumber + 1})}" aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                        </a>
+                    </li>
+
+                    <!-- 맨 마지막 페이지 -->
+                    <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                        <a class="page-link" th:href="${list.last} ? '#' : @{/items(page=${totalPage})}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

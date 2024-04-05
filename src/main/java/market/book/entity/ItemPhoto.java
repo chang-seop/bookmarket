@@ -19,9 +19,16 @@ public class ItemPhoto extends BaseTimeEntity {
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 
-    public ItemPhoto(String imageUrl, Boolean imageMainYn, Item item) {
+    public ItemPhoto(String imageUrl, Boolean imageMainYn) {
         this.imageUrl = imageUrl;
         this.imageMainYn = imageMainYn;
+    }
+
+    /**
+     * * 사용 주의 *
+     * 연관관계 편의 메서드용 set 메서드
+     */
+    public void setItem(Item item) {
         this.item = item;
     }
 }

@@ -8,7 +8,7 @@ import market.book.dto.member.*;
 import market.book.entity.Member;
 import market.book.common.exception.BusinessException;
 import market.book.entity.Profile;
-import market.book.repository.ProfileRepository;
+import market.book.repository.member.ProfileRepository;
 import market.book.repository.member.MemberRepository;
 import market.book.service.MemberService;
 import org.springframework.core.io.Resource;
@@ -116,8 +116,8 @@ public class MemberController {
             return "member/modify";
         }
 
-        if(!fileStore.isImageFiles(memberModifyDto.getImageFile())) {
-            bindingResult.reject("isNotImage", "이미지 파일은 jpg, png, gif 만 가능합니다.");
+        if(!fileStore.isImageFile(memberModifyDto.getImageFile())) {
+            bindingResult.reject("isNotImage", "이미지 파일은 jpg, png, gif 만 가능합니다");
             return "member/modify";
         }
 

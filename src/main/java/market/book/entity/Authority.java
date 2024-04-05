@@ -26,6 +26,10 @@ public class Authority extends BaseTimeEntity {
         this.role = role;
     }
 
+    /**
+     * * 사용 주의 *
+     * 연관관계 편의 메서드용 set 메서드
+     */
     public void setMember(Member member) {
         this.member = member;
     }

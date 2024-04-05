@@ -8,8 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -37,7 +35,7 @@ public class FileStore {
     /**
      * 이미지 파일 .jpeg, .png, .gif 검사 / 파일을 등록하지 않았을 때 통과
      */
-    public Boolean isImageFiles(MultipartFile multipartFiles) {
+    public Boolean isImageFile(MultipartFile multipartFiles) {
         if(!ObjectUtils.isEmpty(multipartFiles)) {
             if(!multipartFiles.isEmpty()) {
                 String contentType = multipartFiles.getContentType();
@@ -49,21 +47,6 @@ public class FileStore {
         }
         // 파일을 등록하지 않았을 경우
         return true;
-    }
-
-    /**
-     * 파일 여러개 업로드 * 주의 *
-     */
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
-        List<UploadFile> storeFileResult = new ArrayList<>();
-        if(!ObjectUtils.isEmpty(multipartFiles)) {
-            for (MultipartFile multipartFile : multipartFiles) {
-                if(!multipartFile.isEmpty()) {
-                    storeFileResult.add(storeFile(multipartFile));
-                }
-            }
-        }
-        return storeFileResult;
     }
 
     /**

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>책 등록</title>
+</head>
+<body>
+
+<section>
+    <form id="addForm" name="addForm" method="post" enctype="multipart/form-data" th:action="@{/items/add}" th:object="${itemSaveDto}">
+        <div class="container">
+            <div class="card p-3 my-2 bg-light border">
+                <h1>책 등록</h1>
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                </div>
+
+                <label for="isbn">isbn</label>
+                <input class="form-control my-2" type="text" title="isbn" placeholder="isbn" id="isbn" name="isbn" th:field="*{isbn}">
+                <div class="field-error" th:errors="*{isbn}"></div>
+
+                <label for="name">책 이름</label>
+                <input class="form-control my-2" type="text" title="이름" placeholder="책 이름" id="name" name="name" th:field="*{name}">
+                <div class="field-error" th:errors="*{name}"></div>
+
+                <label for="introduction">책 소개</label>
+                <input class="form-control my-2" type="text" title="소개" placeholder="책 소개" id="introduction" name="introduction" th:field="*{introduction}">
+                <div class="field-error" th:errors="*{introduction}"></div>
+
+                <label for="author">저자</label>
+                <input class="form-control my-2" type="text" title="저자" placeholder="저자" id="author" name="author" th:field="*{author}">
+                <div class="field-error" th:errors="*{author}"></div>
+
+                <label for="contents">목차</label>
+                <input class="form-control my-2" type="text" title="목차" placeholder="목차" id="contents" name="contents" th:field="*{contents}">
+                <div class="field-error" th:errors="*{contents}"></div>
+
+                <label for="quantity">재고 수량</label>
+                <input class="form-control my-2" style="width: 20rem;" type="text" title="재고 수량" placeholder="재고 수량" id="quantity" name="quantity" th:field="*{quantity}">
+                <div class="field-error" th:errors="*{quantity}"></div>
+
+                <label for="price">가격</label>
+                <input class="form-control my-2" style="width: 20rem;" type="text" title="가격" placeholder="가격" id="price" name="price" th:field="*{price}">
+                <div class="field-error" th:errors="*{price}"></div>
+
+                <label for="mainImage">메인 이미지</label>
+                <input class="form-control my-2" type="file" title="메인 이미지" placeholder="메인 이미지" id="mainImage" name="mainImage" th:field="*{mainImage}">
+                <div class="field-error" th:errors="*{mainImage}"></div>
+
+                <label for="subImage">서브 이미지</label>
+                <input class="form-control my-2" type="file" multiple="multiple" title="서브 이미지" placeholder="서브 이미지" id="subImage" name="subImage" th:field="*{subImage}">
+                <div class="field-error" th:errors="*{subImage}"></div>
+
+                <button class="btn btn-dark my-2" type="submit">등록</button>
+            </div>
+        </div>
+    </form>
+</section>
+
+</body>
+</html>

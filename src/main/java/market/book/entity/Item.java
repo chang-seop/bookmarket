@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.book.entity.common.BaseTimeEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,6 +24,10 @@ public class Item extends BaseTimeEntity {
     private Integer quantity; // 재고 수량
     private Integer price; // 가격
 
+    // Item 엔티티가 관리
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemPhoto> itemPhotoList = new ArrayList<>();
+
     public Item(String isbn, String name, String introduction, String author, String contents, Integer quantity, Integer price) {
         this.isbn = isbn;
         this.name = name;
@@ -29,5 +36,10 @@ public class Item extends BaseTimeEntity {
         this.contents = contents;
         this.quantity = quantity;
         this.price = price;
+    }
+
+    public void addItemPhoto(ItemPhoto itemPhoto) {
+        this.itemPhotoList.add(itemPhoto);
+        itemPhoto.setItem(this);
     }
 }
