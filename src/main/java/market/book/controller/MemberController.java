@@ -36,7 +36,7 @@ public class MemberController {
     private final FileStore fileStore;
     @GetMapping("/signup-view")
     public String signupView(@ModelAttribute MemberSaveDto memberSaveDto) {
-        return "signup";
+        return "member/signup";
     }
 
     @PostMapping("/signup")
@@ -44,13 +44,13 @@ public class MemberController {
                          BindingResult bindingResult,
                          Errors errors) {
 
-        if ( bindingResult.hasErrors()) return "signup";
+        if ( bindingResult.hasErrors()) return "member/signup";
 
         try {
             memberService.create(memberSaveDto);
         } catch(BusinessException e) {
             errors.reject("signUpFail", e.getMessage());
-            return "signup";
+            return "member/signup";
         }
 
         return "redirect:/members/login-view";
@@ -65,7 +65,7 @@ public class MemberController {
             errors.reject("loginFail", "아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        return "login";
+        return "member/login";
     }
 
     @GetMapping("/mypage")
@@ -86,7 +86,7 @@ public class MemberController {
                 .build();
 
         model.addAttribute("memberMyPageDto", memberMyPageDto);
-        return "myPage";
+        return "member/myPage";
     }
 
     @GetMapping("/mypage/modify")
@@ -105,7 +105,7 @@ public class MemberController {
                 .build();
 
         model.addAttribute("memberModifyDto", memberModifyDto);
-        return "memberModify";
+        return "member/modify";
     }
 
     @PostMapping("/mypage/modify")
@@ -113,12 +113,12 @@ public class MemberController {
                                @Valid @ModelAttribute MemberModifyDto memberModifyDto,
                                BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
-            return "memberModify";
+            return "member/modify";
         }
 
         if(!fileStore.isImageFiles(memberModifyDto.getImageFile())) {
             bindingResult.reject("isNotImage", "이미지 파일은 jpg, png, gif 만 가능합니다.");
-            return "memberModify";
+            return "member/modify";
         }
 
         memberService.update(memberDetailsDto.getMemberId(), memberModifyDto);
