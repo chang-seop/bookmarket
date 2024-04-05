@@ -23,3 +23,6 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug # 로깅으로 출력
+
+file:
+  dir: D:/test-file/

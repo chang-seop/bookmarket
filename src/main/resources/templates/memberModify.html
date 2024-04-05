@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>signup</title>
+    <title>memberModify</title>
 </head>
 <body>
 
 <section>
-    <form id="signupForm" name="signupForm" method="post" th:action="@{/members/signup}" th:object="${memberSaveDto}">
+    <form id="updateForm" name="updateForm" enctype="multipart/form-data" method="post" th:action="@{/members/mypage/modify}" th:object="${memberModifyDto}">
         <div class="container">
             <div class="card p-3 my-2 bg-light border">
-                <h1>회원가입</h1>
+                <h1>수정페이지</h1>
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
                 </div>
 
-                <label for="email">이메일</label>
-                <input class="form-control my-2" type="text" title="이메일 입력" placeholder="이메일" id="email" name="email" th:field="*{email}">
-                <div class="field-error" th:errors="*{email}"></div>
+                <label for="imageFile">이미지 수정</label>
+                <input class="form-control my-2" type="file" accept="image/gif, image/jpeg, image/png"
+                       name="imageFile" id="imageFile" th:field="*{imageFile}">
 
-                <label for="password">비밀번호</label>
-                <input class="form-control my-2" type="password" title="비밀번호 입력" placeholder="비밀번호" id="password" name="password" th:field="*{password}">
-                <div class="field-error" th:errors="*{password}"></div>
+                <label for="stateMessage">상태 메세지</label>
+                <input class="form-control my-2" type="text" title="상태 메세지" placeholder="상태 메세지" id="stateMessage" name="stateMessage" th:field="*{stateMessage}">
+                <div class="field-error" th:errors="*{stateMessage}"></div>
 
                 <label for="nickname">닉네임</label>
                 <input class="form-control my-2" type="text" title="닉네임 입력" placeholder="닉네임" id="nickname" name="nickname" th:field="*{nickname}">
@@ -74,7 +74,7 @@
                 <input class="form-control my-2" type="text" title="상세주소 입력" placeholder="상세주소" id="detailedAddress" name="detailedAddress" th:field="*{detailedAddress}">
                 <div class="field-error" th:errors="*{detailedAddress}"></div>
 
-                <button class="btn btn-primary my-2" type="submit">회원가입</button>
+                <button class="btn btn-primary my-2" type="submit">수정</button>
             </div>
         </div>
     </form>

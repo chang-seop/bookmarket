@@ -1,23 +1,39 @@
 package market.book.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import market.book.dto.member.MemberLoginDto;
-import market.book.dto.member.MemberSaveDto;
-import market.book.global.exception.DuplicateEmailException;
+import market.book.common.file.FileStore;
+import market.book.dto.member.*;
+import market.book.entity.Member;
+import market.book.common.exception.BusinessException;
+import market.book.entity.Profile;
+import market.book.repository.ProfileRepository;
+import market.book.repository.member.MemberRepository;
 import market.book.service.MemberService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-
+    private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
+    private final FileStore fileStore;
     @GetMapping("/signup-view")
     public String signupView(@ModelAttribute MemberSaveDto memberSaveDto) {
         return "signup";
@@ -32,8 +48,8 @@ public class MemberController {
 
         try {
             memberService.create(memberSaveDto);
-        } catch(DuplicateEmailException e) {
-            errors.reject("signUpFail", "사용할 수 없는 이메일입니다.");
+        } catch(BusinessException e) {
+            errors.reject("signUpFail", e.getMessage());
             return "signup";
         }
 
@@ -51,4 +67,88 @@ public class MemberController {
 
         return "login";
     }
+
+    @GetMapping("/mypage")
+    public String myPageView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                             Model model) {
+        Member member = memberRepository.findById(memberDetailsDto.getMemberId())
+                .orElseThrow(() -> new BusinessException("not found member id"));
+
+        MemberMyPageDto memberMyPageDto = MemberMyPageDto.builder()
+                .email(member.getEmail())
+                .username(member.getUsername())
+                .nickname(member.getNickname())
+                .zoneCode(member.getAddress().getZoneCode())
+                .subAddress(member.getAddress().getSubAddress())
+                .detailedAddress(member.getAddress().getDetailedAddress())
+                .imageUrl(member.getProfile().getImageUrl())
+                .stateMessage(member.getProfile().getStateMessage())
+                .build();
+
+        model.addAttribute("memberMyPageDto", memberMyPageDto);
+        return "myPage";
+    }
+
+    @GetMapping("/mypage/modify")
+    public String myPageUpdateView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                                   Model model) {
+        Member member = memberRepository.findById(memberDetailsDto.getMemberId())
+                .orElseThrow(() -> new BusinessException("not found member id"));
+
+        MemberModifyDto memberModifyDto = MemberModifyDto.builder()
+                .stateMessage(member.getProfile().getStateMessage())
+                .username(member.getUsername())
+                .nickname(member.getNickname())
+                .zoneCode(member.getAddress().getZoneCode())
+                .subAddress(member.getAddress().getSubAddress())
+                .detailedAddress(member.getAddress().getDetailedAddress())
+                .build();
+
+        model.addAttribute("memberModifyDto", memberModifyDto);
+        return "memberModify";
+    }
+
+    @PostMapping("/mypage/modify")
+    public String myPageUpdate(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                               @Valid @ModelAttribute MemberModifyDto memberModifyDto,
+                               BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "memberModify";
+        }
+
+        if(!fileStore.isImageFiles(memberModifyDto.getImageFile())) {
+            bindingResult.reject("isNotImage", "이미지 파일은 jpg, png, gif 만 가능합니다.");
+            return "memberModify";
+        }
+
+        memberService.update(memberDetailsDto.getMemberId(), memberModifyDto);
+
+        return "redirect:/members/mypage";
+    }
+
+    @ResponseBody
+    @GetMapping("/profiles/images/{fileName}")
+    public ResponseEntity<Resource> profileImage(@PathVariable String fileName,
+                                                 HttpServletResponse response) throws IOException {
+        Optional<Profile> findProfile = profileRepository.findByImageUrl(fileName);
+
+        // DB 에 존재하는지 확인
+        if(findProfile.isPresent()) {
+            String imageName = findProfile.get().getImageUrl();
+            try {
+                UrlResource resource = new UrlResource("file:" + fileStore.getFullPath(imageName));
+
+                return ResponseEntity.ok()
+                        .cacheControl(CacheControl.maxAge(15, TimeUnit.DAYS)) // 15일 캐시 설정
+                        .body(resource);
+
+            } catch (IOException e) {
+                throw new BusinessException("이미지를 찾을 수 없습니다");
+            }
+        }
+
+        response.sendError(404);
+        return null;
+    }
+
 }

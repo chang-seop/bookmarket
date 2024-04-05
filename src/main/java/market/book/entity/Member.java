@@ -49,4 +49,17 @@ public class Member extends BaseTimeEntity {
         authorityList.add(authority);
         authority.setMember(this);
     }
+
+    // 비즈니스 코드
+    public void changeAddress(Address address) {
+        this.address = address;
+    }
+
+    public void changeUsername(String username) {
+        this.username = username;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

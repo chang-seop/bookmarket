@@ -8,18 +8,28 @@
 <section>
     <form id="loginForm" name="loginForm" method="post" th:action="@{/members/login}" th:object="${memberLoginDto}">
         <div class="container">
-            <div class="card p-3 my-2 bg-light border">
-                <h1>로그인</h1>
-                <div class="form-group" th:if="${#fields.hasGlobalErrors()}">
-                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+            <div class="card p-3 my-4 bg-light border">
+                <div class="d-flex justify-content-center my-2">
+                    <h1>로그인</h1>
                 </div>
-                <div class="form-group">
-                    <input class="form-control my-2 mx-auto" type="text" title="아이디 입력" placeholder="이메일" th:field="*{email}">
+                <div class="d-flex justify-content-center my-2">
+                    <div class="form-group" th:if="${#fields.hasGlobalErrors()}">
+                        <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input class="form-control my-2 mx-auto" type="password" title="비밀번호 입력" placeholder="비밀번호" th:field="*{password}">
+                <div class="d-flex justify-content-center my-2">
+                    <div class="form-group w-50">
+                        <input class="form-control my-2" type="text" title="아이디 입력" placeholder="이메일" th:field="*{email}">
+                    </div>
                 </div>
-                <button class="btn btn-primary my-2" type="submit">로그인</button>
+                <div class="d-flex justify-content-center my-2">
+                    <div class="form-group w-50">
+                        <input class="form-control my-2" type="password" title="비밀번호 입력" placeholder="비밀번호" th:field="*{password}">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center my-2">
+                    <button class="btn btn-primary my-2 w-50" type="submit">로그인</button>
+                </div>
             </div>
         </div>
     </form>
