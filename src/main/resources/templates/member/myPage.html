@@ -30,7 +30,7 @@
             <input class="form-control my-2" type="text" title="이름 입력" placeholder="이름" id="username" name="username" th:field="${memberMyPageDto.username}" disabled>
 
             <label for="zoneCode">우편번호</label>
-            <input class="form-control my-2 w-50" type="text" title="우편번호 입력" placeholder="우편번호" id="zoneCode" name="zoneCode" th:field="${memberMyPageDto.zoneCode}" disabled>
+            <input class="form-control my-2" style="width: 10rem;" type="text" title="우편번호 입력" placeholder="우편번호" id="zoneCode" name="zoneCode" th:field="${memberMyPageDto.zoneCode}" disabled>
 
             <label for="subAddress">주소</label>
             <input class="form-control my-2" type="text" title="주소 입력" placeholder="주소" id="subAddress" name="subAddress" th:field="${memberMyPageDto.subAddress}" disabled>
@@ -38,7 +38,7 @@
             <label for="detailedAddress">상세주소</label>
             <input class="form-control my-2" type="text" title="상세주소 입력" placeholder="상세주소" id="detailedAddress" name="detailedAddress" th:field="${memberMyPageDto.detailedAddress}" disabled>
 
-            <a class="btn btn-primary my-2" th:href="@{/members/mypage/modify}">수정</a>
+            <a class="btn btn-dark my-2" th:href="@{/members/mypage/modify}">수정</a>
         </div>
     </div>
 </section>
