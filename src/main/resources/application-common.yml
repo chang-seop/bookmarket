@@ -29,3 +29,6 @@ logging:
 
 security:
   allowed-uris: /, /members/login-view, /members/login, /members/signup, /members/signup-view
+
+mvc:
+  exclude-uris: /resources/**, /members/login-view, /members/login, /members/signup, /members/signup-view

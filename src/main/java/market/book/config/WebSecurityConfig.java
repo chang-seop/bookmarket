@@ -6,6 +6,7 @@ import market.book.config.auth.handler.MemberCustomLoginFailHandler;
 import market.book.config.auth.handler.MemberCustomLoginSuccessHandler;
 import market.book.config.auth.handler.WebAccessDeniedHandler;
 import market.book.config.auth.handler.WebAuthenticationEntryPoint;
+import market.book.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,6 +41,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain resources(HttpSecurity http) throws Exception {
         return http
                 .securityMatcher("resources/**")
+                .headers((header) -> header.cacheControl(HeadersConfigurer.CacheControlConfig::disable)) // 정적 파일 cache 설정
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                 .requestCache(RequestCacheConfigurer::disable)
                 .securityContext(AbstractHttpConfigurer::disable)
