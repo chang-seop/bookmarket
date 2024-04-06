@@ -71,7 +71,7 @@ public class MemberController {
     @GetMapping("/mypage")
     public String myPageView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
                              Model model) {
-        Member member = memberRepository.findById(memberDetailsDto.getMemberId())
+        Member member = memberRepository.findFetchProfileById(memberDetailsDto.getMemberId())
                 .orElseThrow(() -> new BusinessException("not found member id"));
 
         MemberMyPageDto memberMyPageDto = MemberMyPageDto.builder()
@@ -92,7 +92,7 @@ public class MemberController {
     @GetMapping("/mypage/modify")
     public String myPageUpdateView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
                                    Model model) {
-        Member member = memberRepository.findById(memberDetailsDto.getMemberId())
+        Member member = memberRepository.findFetchProfileById(memberDetailsDto.getMemberId())
                 .orElseThrow(() -> new BusinessException("not found member id"));
 
         MemberModifyDto memberModifyDto = MemberModifyDto.builder()
