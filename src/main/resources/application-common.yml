@@ -28,11 +28,6 @@ server:
       http-only: true
       timeout: 1800
 
-logging:
-  level:
-    market:
-      book: trace
-
 security:
   allowed-uris: /, /members/login-view, /members/login, /members/signup, /members/signup-view
 

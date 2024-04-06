@@ -21,8 +21,14 @@ spring:
     ansi:
       enabled: always
 
-logging.level:
-  org.hibernate.SQL: debug # 로깅으로 출력
+logging:
+  level:
+    market:
+      book: trace
+
+    org:
+      hibernate:
+        SQL: debug # 로깅으로 출력
 
 file:
   dir: D:/test-file/
