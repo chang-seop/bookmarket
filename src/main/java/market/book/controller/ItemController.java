@@ -44,10 +44,15 @@ public class ItemController {
     @GetMapping
     public String mainView(@PageableDefault(page = 0, size = 20) Pageable pageable,
                            Model model) {
-        Page<ItemMainDto> pageItemMainDto = itemQueryRepository.findPageItemMainDto(null, pageable)
-                .map(ItemMainDto::new);
+        Page<ItemMainDto> pageItemMainDto = itemQueryRepository.findPageItemMainDto(null, pageable);
         model.addAttribute("list", pageItemMainDto);
         return "item/main";
+    }
+
+    @GetMapping("/{itemId}")
+    public String detailView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                             @PathVariable Long itemId) {
+        return "item/detail";
     }
 
     @GetMapping("/add")

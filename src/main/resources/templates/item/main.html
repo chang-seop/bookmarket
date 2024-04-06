@@ -12,71 +12,103 @@
                 <a class="btn btn-dark my-2" style="width: 10rem;" th:href="@{/items/add}">책 등록</a>
             </div>
 
+            <th:block layout:fragment="script">
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+                        $(document).ready(function() {
+                            // 아이템 호버 이벤트
+                            $('.itemBox').hover(function() {
+                                $(this).addClass('shadow');
+                            }, function() {
+                                $(this).removeClass('shadow')
+                            });
 
-            <div class="d-flex justify-content-center flex-wrap my-2" >
-                <!-- 책 상품 -->
-                <div class="card my-2 mx-2" th:each="item : ${list}" style="width: 18rem">
-                    <th:block th:each="photoDto : ${item?.itemPhotoDtoList}">
-                        <img class="card-img-top" th:if="${photoDto?.imageMainYn}"
-                             th:src="@{/items/images/{param}(param=${photoDto.imageUrl})}"
-                             alt="image cap">
-                    </th:block>
-                    <div class="card-body">
-                        <p class="card-text" th:text="${item.name}"></p>
-                        <p class="card-text" th:text="${item.author}"></p>
-                        <p class="card-text" data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></p>
+                            // 아이템 클릭 이벤트
+                            $('.itemBox').click(function() {
+                                let itemId = $(this).children('input').val();
+                                location.href = "/items/" + itemId;
+                            });
+                        });
+                    /*]]>*/
+                </script>
+            </th:block>
+
+        <div class="d-flex justify-content-center flex-wrap my-2" >
+            <!-- 책 상품 -->
+            <div class="card my-2 mx-2 itemBox" th:each="item : ${list}" style="width: 18rem; cursor: pointer;">
+                <input type="hidden" th:value="${item.id}">
+                <th:block th:if="${item.imageUrl != null}">
+                     <div style="width: 100%; height:200px; overflow: hidden;">
+                         <img class="card-img-top"
+                              style="width: 100%; height: 100%; object-fit: cover;"
+                              th:src="@{/items/images/{param}(param=${item.imageUrl})}"
+                              alt="image cap"/>
+                     </div>
+                </th:block>
+                <th:block th:if="${item.imageUrl == null}">
+                    <div style="width: 100%; height:200px; overflow: hidden;">
+                        <img class="card-img-top"
+                             style="width: 100%; height: 100%; object-fit: cover;"
+                             th:src="@{/resources/image/null-image.jpg}"
+                             alt="image cap"/>
                     </div>
+                </th:block>
+                <div class="card-body">
+                    <p class="card-text" th:text="${item.name}"></p>
+                    <p class="card-text" th:text="${item.author}"></p>
+                    <p class="card-text" data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></p>
                 </div>
             </div>
+        </div>
 
-            <div th:if="${!list.isEmpty()}">
-                <ul class="pagination pagination-sm justify-content-center"
-                    th:with="
-                        pageNumber = ${list.pageable.pageNumber},
-                        pageSize = ${list.pageable.pageSize},
-                        totalPage = ${list.totalPages},
-                        startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
-                        tempEndPage = ${startPage + pageSize - 1},
-                        endPage = (${tempEndPage < totalPage ? tempEndPage : totalPage})">
+        <div th:if="${!list.isEmpty()}">
+            <ul class="pagination pagination-sm justify-content-center"
+                th:with="
+                    pageNumber = ${list.pageable.pageNumber},
+                    pageSize = ${list.pageable.pageSize},
+                    totalPage = ${list.totalPages},
+                    startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                    tempEndPage = ${startPage + pageSize - 1},
+                    endPage = (${tempEndPage < totalPage ? tempEndPage : totalPage})">
 
-                    <!-- 처음 페이지 -->
-                    <li th:classappend="${list.first} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="${list.first} ? '#' : @{/items(page=${startPage})}">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
+                <!-- 처음 페이지 -->
+                <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${list.first} ? '#' : @{/items(page=${startPage})}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
 
-                    <!-- 이전 페이지 -->
-                    <li th:classappend="${list.first} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="${list.first} ? '#' : @{/items(page=${pageNumber - 1})}">
-                            <span aria-hidden="true">&lt;</span>
-                        </a>
-                    </li>
+                <!-- 이전 페이지 -->
+                <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${list.first} ? '#' : @{/items(page=${pageNumber - 1})}">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
 
-                    <!-- 1, 2, 3 ... 페이지 -->
-                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                        th:classappend="${page == pageNumber + 1} ? 'active'"
-                        class="page-item">
-                        <a th:text="${page}" class="page-link" th:href="@{/items(page=${page - 1})}"></a>
-                    </li>
+                <!-- 1, 2, 3 ... 페이지 -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${page == pageNumber + 1} ? 'active'"
+                    class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{/items(page=${page - 1})}"></a>
+                </li>
 
-                    <!-- 다음 페이지 -->
-                    <li th:classappend="${list.last} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="${list.last} ? '#' : @{/items(page=${pageNumber + 1})}" aria-label="Next">
-                            <span aria-hidden="true">&gt;</span>
-                        </a>
-                    </li>
+                <!-- 다음 페이지 -->
+                <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${list.last} ? '#' : @{/items(page=${pageNumber + 1})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
 
-                    <!-- 맨 마지막 페이지 -->
-                    <li th:classappend="${list.last} ? 'disabled'" class="page-item">
-                        <a class="page-link" th:href="${list.last} ? '#' : @{/items(page=${totalPage})}">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                <!-- 맨 마지막 페이지 -->
+                <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${list.last} ? '#' : @{/items(page=${totalPage})}">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
 </section>
 
 </body>

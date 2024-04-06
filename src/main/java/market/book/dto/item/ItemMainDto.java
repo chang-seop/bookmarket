@@ -11,14 +11,13 @@ public class ItemMainDto {
     private String name;
     private String author;
     private Integer price;
-    private List<ItemPhotoDto> itemPhotoDtoList;
+    private String imageUrl;
 
-    public ItemMainDto(Item item) {
-        this.name = item.getName();
-        this.author = item.getAuthor();
-        this.price = item.getPrice();
-        this.itemPhotoDtoList = item.getItemPhotoList()
-                .stream()
-                .map(ItemPhotoDto::new).toList();
+    public ItemMainDto(Long id, String name, String author, Integer price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 }
