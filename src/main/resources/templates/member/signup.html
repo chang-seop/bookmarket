@@ -30,15 +30,11 @@
                 <input class="form-control my-2" type="text" title="이름 입력" placeholder="이름" id="username" name="username" th:field="*{username}">
                 <div class="field-error" th:errors="*{username}"></div>
 
-                <label for="contact">연락처</label>
-                <input class="form-control my-2" type="text" title="연락처 입력" placeholder="연락처" id="contact" name="contact" th:field="*{contact}">
-                <div class="field-error" th:errors="*{contact}"></div>
-
-                <!-- 주소 다음 API 이용 (주소 입력) -->
                 <th:block layout:fragment="script">
                     <script th:inline="javascript">
                         /*<![CDATA[*/
                             $(document).ready(function() {
+                                // 주소 다음 API 이용 (주소 입력)
                                 $('#searchAddress').click(function() {
                                     new daum.Postcode({
                                         oncomplete: function(data) {
@@ -60,10 +56,44 @@
                                         }
                                     }).open();
                                 });
+
+                                // 연락처 정규식 xxx-xxxx-xxxx
+                                $('#contact').blur(function() {
+                                    // 입력된 전화번호 가져오기
+                                    let phoneNumber = $(this).val();
+                                    if(phoneNumber) {
+                                        // 정규식을 사용하여 형식 검사
+                                        let regex = /^(01[0-9]{1}-?[0-9]{4}-?[0-9]{4}|01[0-9]{8})$/;
+
+                                        if(!regex.test(phoneNumber)) {
+                                            // 잘못된 형식일 경우
+                                            alert("잘못된 형식의 연락처입니다.");
+                                            $(this).val("");
+                                            return false;
+                                        }
+
+                                        let pcs = phoneNumber;
+                                        // 입력된 문자열에서 하이폰('-')을 제거하여 숫자만 추출
+                                        let replacePcs = pcs.replace(/[^0-9]/g, '');
+
+                                        // 전화번호 형식 (010-1234-5678)으로 변환
+                                        if(replacePcs.length === 10) {
+                                            replacePcs = replacePcs.substring(0, 3) + '-' + replacePcs.substring(3, 7) + '-' + replacePcs.substring(7, 11);
+                                        } else if(replacePcs.length === 11) {
+                                            replacePcs = replacePcs.substring(0, 3) + '-' + replacePcs.substring(3, 7) + '-' + replacePcs.substring(7, 11);
+                                        }
+                                        $(this).val(replacePcs);
+                                    }
+                                });
                             });
                         /*]]>*/
                     </script>
                 </th:block>
+
+                <label for="contact">연락처</label>
+                <input class="form-control my-2" type="text" title="연락처 입력" placeholder="연락처" id="contact" name="contact" th:field="*{contact}">
+                <div class="field-error" th:errors="*{contact}"></div>
+
                 <div class="btn btn-dark my-2" style="width: 10rem;" id="searchAddress">주소찾기</div>
 
                 <label for="zoneCode">우편번호</label>
