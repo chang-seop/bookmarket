@@ -9,7 +9,7 @@ import market.book.entity.common.BaseTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderBook extends BaseTimeEntity {
+public class OrderItem extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "ORDER_ITEM_ID")
     private Long id;
@@ -22,7 +22,7 @@ public class OrderBook extends BaseTimeEntity {
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 
-    public OrderBook(Order order, Item item) {
+    public OrderItem(Order order, Item item) {
         this.order = order;
         this.item = item;
     }

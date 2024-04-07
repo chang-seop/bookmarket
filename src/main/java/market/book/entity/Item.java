@@ -28,6 +28,10 @@ public class Item extends BaseTimeEntity {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPhoto> itemPhotoList = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SELLER_ID")
+    private Seller seller;
+
     public Item(String isbn, String name, String introduction, String author, String contents, Integer quantity, Integer price) {
         this.isbn = isbn;
         this.name = name;

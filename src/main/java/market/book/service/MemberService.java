@@ -45,6 +45,7 @@ public class MemberService {
                 memberSaveDto.getEmail(),
                 memberSaveDto.getNickname(),
                 passwordEncoder.encode(memberSaveDto.getPassword()),
+                memberSaveDto.getContact(),
                 new Address(memberSaveDto.getZoneCode(),
                         memberSaveDto.getSubAddress(),
                         memberSaveDto.getDetailedAddress()),
@@ -64,6 +65,7 @@ public class MemberService {
         // 변경 감지
         member.changeUsername(memberModifyDto.getUsername()); // 이름
         member.changeNickname(memberModifyDto.getNickname()); // 닉네임
+        member.changeContact(memberModifyDto.getContact()); // 연락처
         member.changeAddress(new Address(memberModifyDto.getZoneCode(), // 우편번호
                         memberModifyDto.getSubAddress(), // 주소
                         memberModifyDto.getDetailedAddress())); // 세부주소

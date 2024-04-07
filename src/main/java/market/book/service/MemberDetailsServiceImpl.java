@@ -28,8 +28,9 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
                                 m.getId(),
                                 m.getUsername(),
                                 m.getEmail(),
-                                m.getPassword(),
                                 m.getNickname(),
+                                m.getPassword(),
+                                m.getContact(),
                                 m.getAuthorityList()
                                         .stream()
                                         .map(Authority::getRole)
@@ -44,8 +45,9 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
                             m.getId(),
                             m.getUsername(),
                             m.getEmail(),
-                            m.getPassword(),
                             m.getNickname(),
+                            m.getPassword(),
+                            m.getContact(),
                             m.getAuthorityList()
                                     .stream()
                                     .map(Authority::getRole)

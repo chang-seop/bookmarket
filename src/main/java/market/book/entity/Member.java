@@ -21,6 +21,7 @@ public class Member extends BaseTimeEntity {
     private String email;
     private String nickname;
     private String password;
+    private String contact;
     @Embedded
     private Address address;
 
@@ -34,13 +35,25 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Authority> authorityList = new ArrayList<>();
 
-    public Member(String username, String email, String nickname, String password, Address address, Profile profile) {
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SELLER_ID")
+    private Seller seller;
+
+    public Member(String username, String email, String nickname, String password, String contact, Address address, Profile profile) {
         this.username = username;
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.contact = contact;
         this.address = address;
         this.profile = profile;
+    }
+
+    /**
+     * * 사용 주의 *
+     */
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 
     // 멤버가 authority 를 관리
@@ -61,5 +74,8 @@ public class Member extends BaseTimeEntity {
 
     public void changeNickname(String nickname) {
         this.nickname = nickname;
+    }
+    public void changeContact(String contact) {
+        this.contact = contact;
     }
 }

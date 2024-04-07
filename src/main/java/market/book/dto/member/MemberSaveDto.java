@@ -10,6 +10,7 @@ public class MemberSaveDto {
     private String nickname;
     private String email;
     private String password;
+    private String contact;
     private String zoneCode;
     private String subAddress;
     private String detailedAddress;

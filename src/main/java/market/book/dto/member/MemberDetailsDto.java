@@ -16,8 +16,9 @@ public class MemberDetailsDto implements UserDetails {
     private Long memberId;
     private String username;
     private String email;
-    private String password;
     private String nickname;
+    private String password;
+    private String contact;
     private List<String> roles;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

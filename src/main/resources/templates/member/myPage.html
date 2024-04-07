@@ -21,22 +21,25 @@
             <input class="form-control my-2" type="text" title="상태 메세지" placeholder="상태 메세지" id="stateMessage" name="stateMessage" th:field="${memberMyPageDto.stateMessage}" disabled>
 
             <label for="email">이메일</label>
-            <input class="form-control my-2" type="text" title="닉네임 입력" placeholder="닉네임" id="email" name="email" th:field="${memberMyPageDto.email}" disabled>
+            <input class="form-control my-2" type="text" title="닉네임" placeholder="닉네임" id="email" name="email" th:field="${memberMyPageDto.email}" disabled>
 
             <label for="nickname">닉네임</label>
-            <input class="form-control my-2" type="text" title="닉네임 입력" placeholder="닉네임" id="nickname" name="nickname" th:field="${memberMyPageDto.nickname}" disabled>
+            <input class="form-control my-2" type="text" title="닉네임" placeholder="닉네임" id="nickname" name="nickname" th:field="${memberMyPageDto.nickname}" disabled>
 
             <label for="username">이름</label>
-            <input class="form-control my-2" type="text" title="이름 입력" placeholder="이름" id="username" name="username" th:field="${memberMyPageDto.username}" disabled>
+            <input class="form-control my-2" type="text" title="이름" placeholder="이름" id="username" name="username" th:field="${memberMyPageDto.username}" disabled>
+
+            <label for="contact">연락처</label>
+            <input class="form-control my-2" type="text" title="연락처" placeholder="연락처" id="contact" name="contact" th:field="${memberMyPageDto.contact}" disabled>
 
             <label for="zoneCode">우편번호</label>
             <input class="form-control my-2" style="width: 10rem;" type="text" title="우편번호 입력" placeholder="우편번호" id="zoneCode" name="zoneCode" th:field="${memberMyPageDto.zoneCode}" disabled>
 
             <label for="subAddress">주소</label>
-            <input class="form-control my-2" type="text" title="주소 입력" placeholder="주소" id="subAddress" name="subAddress" th:field="${memberMyPageDto.subAddress}" disabled>
+            <input class="form-control my-2" type="text" title="주소" placeholder="주소" id="subAddress" name="subAddress" th:field="${memberMyPageDto.subAddress}" disabled>
 
             <label for="detailedAddress">상세주소</label>
-            <input class="form-control my-2" type="text" title="상세주소 입력" placeholder="상세주소" id="detailedAddress" name="detailedAddress" th:field="${memberMyPageDto.detailedAddress}" disabled>
+            <input class="form-control my-2" type="text" title="상세주소" placeholder="상세주소" id="detailedAddress" name="detailedAddress" th:field="${memberMyPageDto.detailedAddress}" disabled>
 
             <a class="btn btn-dark my-2" th:href="@{/members/mypage/modify}">수정</a>
         </div>

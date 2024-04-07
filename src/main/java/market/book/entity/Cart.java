@@ -13,7 +13,6 @@ public class Cart extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "CART_ID")
     private Long id;
-    private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
@@ -23,8 +22,7 @@ public class Cart extends BaseTimeEntity {
     @JoinColumn(name = "ITEM_ID")
     private Item item;
 
-    public Cart(Integer count, Member member, Item item) {
-        this.count = count;
+    public Cart(Member member, Item item) {
         this.member = member;
         this.item = item;
     }

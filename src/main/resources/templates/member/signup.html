@@ -30,6 +30,10 @@
                 <input class="form-control my-2" type="text" title="이름 입력" placeholder="이름" id="username" name="username" th:field="*{username}">
                 <div class="field-error" th:errors="*{username}"></div>
 
+                <label for="contact">연락처</label>
+                <input class="form-control my-2" type="text" title="연락처 입력" placeholder="연락처" id="contact" name="contact" th:field="*{contact}">
+                <div class="field-error" th:errors="*{contact}"></div>
+
                 <!-- 주소 다음 API 이용 (주소 입력) -->
                 <th:block layout:fragment="script">
                     <script th:inline="javascript">

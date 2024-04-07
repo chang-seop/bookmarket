@@ -22,7 +22,7 @@ public class Category extends BaseTimeEntity {
     @JoinColumn(name = "PARENT_ID")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Category> child = new ArrayList<>();
 
     public Category(String name) {
