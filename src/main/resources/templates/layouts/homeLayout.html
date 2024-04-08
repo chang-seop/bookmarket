@@ -57,6 +57,12 @@
                                 <a class="nav-link" href="#" sec:authorize="isAuthenticated()" th:href="@{/items}">북스토어</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="#" sec:authorize="hasRole('ROLE_USER')" th:href="@{/sellers/main}">책 판매</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admins/main}">관리</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#" sec:authorize="isAnonymous()" th:href="@{/members/signup-view}">회원가입</a>
                             </li>
                             <li class="nav-item">
@@ -64,9 +70,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#" sec:authorize="isAuthenticated()" th:href="@{/members/logout}">로그아웃</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/members/admin}">어드민</a>
                             </li>
                         </ul>
                     </div>

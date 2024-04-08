@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>판매자</title>
+</head>
+<body>
+
+<section>
+    <div class="container">
+        <div class="d-flex justify-content-center card p-3 my-4 bg-light border">
+            <div class="d-flex justify-content-start my-2" sec:authorize="hasRole('ROLE_SELLER')">
+                <a class="btn btn-dark my-2 mx-2" style="width: 10rem;" th:href="@{/items/add}">책 등록</a>
+                <a class="btn btn-dark my-2 mx-2" style="width: 10rem;" th:href="@{/sellers/items}">책 관리</a>
+                <a class="btn btn-dark my-2 mx-2" style="width: 10rem;" href="#">판매자 설정</a>
+            </div>
+
+            <!-- 이미 판매자로 등록 했다면 보여주지 않기 -->
+            <div th:if="${isSeller != true}" class="d-flex justify-content-start my-2">
+                <!-- 판매자 등록 -->
+                <a class="btn btn-dark my-2" style="width: 10rem;" th:href="@{/sellers/add}">판매자 등록</a>
+            </div>
+
+            <!-- 판매자 등록이 완료가 되었고 AND SELLER 권한을 기다리고 있을 경우 -->
+            <div th:if="${isSeller == true}" sec:authorize="!hasRole('ROLE_SELLER')">
+                <h5>현재 관리자의 승인을 받고 있습니다.</h5>
+            </div>
+
+        </div>
+
+        <!-- 콘텐츠 영역 -->
+        <div class="justify-content-center">
+
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
