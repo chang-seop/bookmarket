@@ -3,15 +3,19 @@ package market.book.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import market.book.common.exception.BusinessException;
+import market.book.common.file.FileStore;
+import market.book.dto.item.ItemSaveDto;
 import market.book.dto.member.MemberDetailsDto;
 import market.book.dto.seller.SellerModifyDto;
 import market.book.dto.seller.SellerSaveDto;
 import market.book.entity.Member;
 import market.book.repository.member.MemberRepository;
+import market.book.service.ItemService;
 import market.book.service.SellerService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +31,10 @@ import java.util.Optional;
 public class SellerController {
     private final SellerService sellerService;
     private final MemberRepository memberRepository;
+    private final FileStore fileStore;
+    private final ItemService itemService;
     /**
-     * 등록 폼
+     * 판매자 등록 폼
      */
     @GetMapping("/add")
     public String addView(@ModelAttribute SellerSaveDto sellerSaveDto) {
@@ -36,7 +42,7 @@ public class SellerController {
     }
 
     /**
-     * 등록
+     * 판매자 등록
      */
     @PostMapping("/add")
     public String add(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
@@ -74,6 +80,14 @@ public class SellerController {
     }
 
     /**
+     * 수정 폼
+     */
+    @GetMapping("/modify")
+    public String modifyView(@ModelAttribute SellerModifyDto sellerModifyDto) {
+        return "seller/modify";
+    }
+
+    /**
      * 등록 한 아이템 폼
      */
     @GetMapping("/items")
@@ -81,11 +95,41 @@ public class SellerController {
         return "seller/item";
     }
 
-    /**
-     * 수정 폼
-     */
-    @GetMapping("/modify")
-    public String modifyView(@ModelAttribute SellerModifyDto sellerModifyDto) {
-        return "seller/modify";
+    @GetMapping("/items/add")
+    public String addView(@ModelAttribute ItemSaveDto itemSaveDto) {
+        return "/seller/itemAdd";
+    }
+
+    @PostMapping("/items/add")
+    public String add(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                      @Valid @ModelAttribute ItemSaveDto itemSaveDto,
+                      BindingResult bindingResult,
+                      Errors errors) {
+        if(bindingResult.hasErrors()) {
+            return "/seller/itemAdd";
+        }
+
+        if(!ObjectUtils.isEmpty(itemSaveDto.getMainImage())) {
+            if(!fileStore.isImageFile(itemSaveDto.getMainImage())) {
+                errors.reject("addFail", "메인 이미지 파일은 jpg, png, gif 만 가능합니다");
+            }
+        }
+
+        if(!ObjectUtils.isEmpty(itemSaveDto.getSubImage())) {
+            itemSaveDto.getSubImage().forEach((imageFile) -> {
+                if(!fileStore.isImageFile(imageFile)) {
+                    errors.reject("addFail", "서브 이미지 파일은 jpg, png, gif 만 가능합니다");
+                }
+            });
+        }
+
+        try{
+            itemService.create(memberDetailsDto.getMemberId(), itemSaveDto);
+        } catch(BusinessException e) {
+            errors.reject("addFail", e.getMessage());
+            return "/seller/itemAdd";
+        }
+
+        return "redirect:/sellers/items";
     }
 }

@@ -55,45 +55,6 @@ public class ItemController {
         return "item/detail";
     }
 
-    @GetMapping("/add")
-    public String addView(@ModelAttribute ItemSaveDto itemSaveDto) {
-
-        return "item/add";
-    }
-
-    @PostMapping("/add")
-    public String add(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
-                      @Valid @ModelAttribute ItemSaveDto itemSaveDto,
-                      BindingResult bindingResult,
-                      Errors errors) {
-        if(bindingResult.hasErrors()) {
-            return "/item/add";
-        }
-
-        if(!ObjectUtils.isEmpty(itemSaveDto.getMainImage())) {
-            if(!fileStore.isImageFile(itemSaveDto.getMainImage())) {
-                errors.reject("addFail", "메인 이미지 파일은 jpg, png, gif 만 가능합니다");
-            }
-        }
-
-        if(!ObjectUtils.isEmpty(itemSaveDto.getSubImage())) {
-            itemSaveDto.getSubImage().forEach((imageFile) -> {
-                    if(!fileStore.isImageFile(imageFile)) {
-                        errors.reject("addFail", "서브 이미지 파일은 jpg, png, gif 만 가능합니다");
-                    }
-            });
-        }
-
-        try{
-            itemService.create(memberDetailsDto.getMemberId(), itemSaveDto);
-        } catch(BusinessException e) {
-            errors.reject("addFail", e.getMessage());
-            return "/item/add";
-        }
-
-        return "redirect:/items";
-    }
-
     @ResponseBody
     @GetMapping("/images/{imageUrl}")
     public ResponseEntity<Resource> itemImage(@PathVariable String imageUrl,

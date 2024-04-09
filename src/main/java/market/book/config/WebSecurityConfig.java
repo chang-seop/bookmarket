@@ -6,6 +6,7 @@ import market.book.config.auth.handler.MemberCustomLoginFailHandler;
 import market.book.config.auth.handler.MemberCustomLoginSuccessHandler;
 import market.book.config.auth.handler.WebAccessDeniedHandler;
 import market.book.config.auth.handler.WebAuthenticationEntryPoint;
+import market.book.entity.type.RoleType;
 import market.book.repository.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +29,14 @@ public class WebSecurityConfig {
     private final WebAccessDeniedHandler webAccessDeniedHandler;
     private final WebAuthenticationEntryPoint webAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
-    @Value("${security.allowed-uris}")
-    private String[] allowedUris;
+    @Value("${security.anonymous-uris}")
+    private String[] anonymousUris;
+    @Value("${security.user-uris}")
+    private String[] userUris;
+    @Value("${security.seller-uris}")
+    private String[] sellerUris;
+    @Value("${security.admin-uris}")
+    private String[] adminUris;
 
 
     /**
@@ -61,7 +68,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request ->
                     request
                             .requestMatchers("/resources/**").permitAll()
-                            .requestMatchers(allowedUris).permitAll()
+                            .requestMatchers(anonymousUris).permitAll()
+                            .requestMatchers(userUris).hasAuthority(RoleType.ROLE_USER.name())
+                            .requestMatchers(sellerUris).hasAuthority(RoleType.ROLE_SELLER.name())
+                            .requestMatchers(adminUris).hasAuthority(RoleType.ROLE_ADMIN.name())
                             .anyRequest().authenticated()
                 )
 

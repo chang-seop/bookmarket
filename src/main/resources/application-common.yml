@@ -29,7 +29,10 @@ server:
       timeout: 1800
 
 security:
-  allowed-uris: /, /members/login-view, /members/login, /members/signup, /members/signup-view
+  anonymous-uris: /, /members/login-view, /members/login, /members/signup, /members/signup-view
+  user-uris: /items/**, /sellers/main, /sellers/add
+  seller-uris: /sellers/**
+  admin-uris: /admins/**
 
 mvc:
   exclude-uris: /resources/**, /members/login-view, /members/login, /members/signup, /members/signup-view
