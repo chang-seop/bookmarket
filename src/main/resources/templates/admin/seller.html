@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>판매자 등록 관리</title>
+</head>
+<body>
+
+<section>
+    <div class="container">
+        <div class="d-flex justify-content-center card p-3 my-4 bg-light border">
+
+            <!-- 판매자 등록 리스트 + 권한 부여 버튼 + 페이징 -->
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">판매자 등록 관리</h1>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <!-- 헤더 부분 -->
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>회원 ID</th>
+                                <th>회원 명</th>
+                                <th>이메일</th>
+                                <th>닉네임</th>
+                                <th>연락처</th>
+                                <th>판매자 등록일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <th:block layout:fragment="script">
+                                <script th:inline="javascript">
+                                    /*<![CDATA[*/
+                                        $(document).ready(function() {
+                                            // 클릭 이벤트
+                                            $('.memberInfo').click(function() {
+                                                let memberId = $(this).children('input').val();
+                                                location.href = "/admins/sellers/" + memberId;
+                                            });
+                                        });
+                                    /*]]>*/
+                                </script>
+                            </th:block>
+
+                            <th:block th:each="member : ${list}">
+                                <tr class="memberInfo" style="cursor: pointer;">
+                                    <input type="hidden" th:value="${member.memberId}">
+                                    <td><span class="memberId" th:text="${member.memberId}"></span></td>
+                                    <td><span class="username" th:text="${member.username}"></span></td>
+                                    <td><span class="email" th:text="${member.email}"></span></td>
+                                    <td><span class="nickname" name="" th:text="${member.nickname}"></span></td>
+                                    <td><span class="contact" th:text="${member.contact}"></span></td>
+                                    <td><span class="createdSellerDate" th:text="${#temporals.format(member.createdSellerDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div th:if="${!list.isEmpty()}">
+                        <ul class="pagination pagination-sm justify-content-center"
+                            th:with="
+                                pageNumber = ${list.pageable.pageNumber},
+                                pageSize = ${list.pageable.pageSize},
+                                totalPage = ${list.totalPages},
+                                startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                                tempEndPage = ${startPage + pageSize - 1},
+                                endPage = (${tempEndPage < totalPage ? tempEndPage : totalPage})">
+
+                            <!-- 처음 페이지 -->
+                            <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                                <a class="page-link" th:href="${list.first} ? '#' : @{/admins/sellers(page=${startPage})}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <!-- 이전 페이지 -->
+                            <li th:classappend="${list.first} ? 'disabled'" class="page-item">
+                                <a class="page-link" th:href="${list.first} ? '#' : @{/admins/sellers(page=${pageNumber - 1})}">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            </li>
+
+                            <!-- 1, 2, 3 ... 페이지 -->
+                            <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                                th:classappend="${page == pageNumber + 1} ? 'active'"
+                                class="page-item">
+                                <a th:text="${page}" class="page-link" th:href="@{/admins/sellers(page=${page - 1})}"></a>
+                            </li>
+
+                            <!-- 다음 페이지 -->
+                            <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                                <a class="page-link" th:href="${list.last} ? '#' : @{/admins/sellers(page=${pageNumber + 1})}" aria-label="Next">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            </li>
+
+                            <!-- 맨 마지막 페이지 -->
+                            <li th:classappend="${list.last} ? 'disabled'" class="page-item">
+                                <a class="page-link" th:href="${list.last} ? '#' : @{/admins/sellers(page=${totalPage})}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
