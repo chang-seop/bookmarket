@@ -78,4 +78,7 @@ public class Member extends BaseTimeEntity {
     public void changeContact(String contact) {
         this.contact = contact;
     }
+    public void removeSeller() {
+        this.seller = null;
+    }
 }

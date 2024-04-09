@@ -1,4 +1,4 @@
-package market.book.repository.member;
+package market.book.repository.profile;
 
 
 import market.book.entity.Profile;

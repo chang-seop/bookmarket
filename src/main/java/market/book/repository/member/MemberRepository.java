@@ -14,4 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findFetchProfileByEmail(String email);
     @Query("select m from Member m inner join m.seller s where m.id = :id")
     Optional<Member> findInnerSellerById(Long id);
+    @Query("select m from Member m inner join fetch m.seller s where m.id = :id")
+    Optional<Member> findFetchSellerById(Long id);
 }

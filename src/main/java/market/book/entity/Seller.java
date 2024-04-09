@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import market.book.entity.common.Address;
 import market.book.entity.common.BaseTimeEntity;
-import org.springframework.security.core.parameters.P;
 
 // 일반 판매자일 경우 가족 관계 증명서 및 등본 필요
 // 기업일 경우 사업자 등록 번호 필요

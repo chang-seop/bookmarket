@@ -7,8 +7,8 @@ import market.book.dto.seller.SellerSaveDto;
 import market.book.entity.Member;
 import market.book.entity.Seller;
 import market.book.entity.common.Address;
-import market.book.repository.seller.SellerRepository;
 import market.book.repository.member.MemberRepository;
+import market.book.repository.seller.SellerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -65,5 +65,16 @@ public class SellerService {
                 sellerModifyDto.getZoneCode(),
                 sellerModifyDto.getSubAddress(),
                 sellerModifyDto.getDetailedAddress()));
+    }
+
+    @Transactional
+    public void delete(Long memberId) {
+        Member member = memberRepository.findFetchSellerById(memberId)
+                .orElseThrow(() -> new BusinessException("존재 하지 않는 회원"));
+        Seller seller = member.getSeller();
+
+
+        member.removeSeller(); // 멤버 연관관계 삭제
+        sellerRepository.delete(seller); // seller 엔티티 삭제
     }
 }

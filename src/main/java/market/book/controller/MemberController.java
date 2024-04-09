@@ -8,7 +8,7 @@ import market.book.dto.member.*;
 import market.book.entity.Member;
 import market.book.common.exception.BusinessException;
 import market.book.entity.Profile;
-import market.book.repository.member.ProfileRepository;
+import market.book.repository.profile.ProfileRepository;
 import market.book.repository.member.MemberRepository;
 import market.book.service.MemberService;
 import org.springframework.core.io.Resource;

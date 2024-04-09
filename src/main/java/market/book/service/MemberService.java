@@ -97,4 +97,11 @@ public class MemberService {
             }
         }
     }
+
+    @Transactional
+    public void addMemberRoleSeller(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException("존재 하지 않는 회원"));
+        member.addAuthority(new Authority(RoleType.ROLE_SELLER));
+    }
 }

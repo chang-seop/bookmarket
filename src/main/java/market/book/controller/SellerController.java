@@ -7,9 +7,7 @@ import market.book.dto.member.MemberDetailsDto;
 import market.book.dto.seller.SellerModifyDto;
 import market.book.dto.seller.SellerSaveDto;
 import market.book.entity.Member;
-import market.book.entity.Seller;
 import market.book.repository.member.MemberRepository;
-import market.book.repository.seller.SellerRepository;
 import market.book.service.SellerService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -28,7 +26,6 @@ import java.util.Optional;
 @RequestMapping("/sellers")
 public class SellerController {
     private final SellerService sellerService;
-    private final SellerRepository sellerRepository;
     private final MemberRepository memberRepository;
     /**
      * 등록 폼
