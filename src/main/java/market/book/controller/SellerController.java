@@ -7,11 +7,16 @@ import market.book.common.file.FileStore;
 import market.book.dto.item.ItemSaveDto;
 import market.book.dto.member.MemberDetailsDto;
 import market.book.dto.seller.SellerModifyDto;
+import market.book.dto.seller.SellerMyItemDto;
 import market.book.dto.seller.SellerSaveDto;
 import market.book.entity.Member;
+import market.book.repository.item.ItemQueryRepository;
 import market.book.repository.member.MemberRepository;
 import market.book.service.ItemService;
 import market.book.service.SellerService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +38,7 @@ public class SellerController {
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
     private final ItemService itemService;
+    private final ItemQueryRepository itemQueryRepository;
     /**
      * 판매자 등록 폼
      */
@@ -88,16 +94,22 @@ public class SellerController {
     }
 
     /**
-     * 등록 한 아이템 폼
+     * 판매자가 등록 한 아이템 폼
      */
     @GetMapping("/items")
-    public String itemView() {
+    public String itemView(@PageableDefault(page = 0, size = 20) Pageable pageable,
+                           @AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                           Model model) {
+        Member member = memberRepository.findFetchSellerById(memberDetailsDto.getMemberId())
+                .orElseThrow(() -> new BusinessException("존재 하지 않는 회원 또는 판매자 등록이 안된 회원"));
+        Page<SellerMyItemDto> list = itemQueryRepository.findPageSellerMyItemDtoBySellerId(member.getSeller().getId(), pageable);
+        model.addAttribute("list", list);
         return "seller/item";
     }
 
     @GetMapping("/items/add")
     public String addView(@ModelAttribute ItemSaveDto itemSaveDto) {
-        return "/seller/itemAdd";
+        return "seller/itemAdd";
     }
 
     @PostMapping("/items/add")
@@ -106,7 +118,7 @@ public class SellerController {
                       BindingResult bindingResult,
                       Errors errors) {
         if(bindingResult.hasErrors()) {
-            return "/seller/itemAdd";
+            return "seller/itemAdd";
         }
 
         if(!ObjectUtils.isEmpty(itemSaveDto.getMainImage())) {
@@ -127,7 +139,7 @@ public class SellerController {
             itemService.create(memberDetailsDto.getMemberId(), itemSaveDto);
         } catch(BusinessException e) {
             errors.reject("addFail", e.getMessage());
-            return "/seller/itemAdd";
+            return "seller/itemAdd";
         }
 
         return "redirect:/sellers/items";

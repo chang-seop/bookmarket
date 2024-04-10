@@ -32,7 +32,7 @@ public class Item extends BaseTimeEntity {
     @JoinColumn(name = "SELLER_ID")
     private Seller seller;
 
-    public Item(String isbn, String name, String introduction, String author, String contents, Integer quantity, Integer price) {
+    public Item(String isbn, String name, String introduction, String author, String contents, Integer quantity, Integer price, Seller seller) {
         this.isbn = isbn;
         this.name = name;
         this.introduction = introduction;
@@ -40,6 +40,7 @@ public class Item extends BaseTimeEntity {
         this.contents = contents;
         this.quantity = quantity;
         this.price = price;
+        this.seller = seller;
     }
 
     public void addItemPhoto(ItemPhoto itemPhoto) {

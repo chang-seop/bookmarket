@@ -11,6 +11,7 @@ import market.book.entity.ItemPhoto;
 import market.book.entity.Member;
 import market.book.repository.item.ItemRepository;
 import market.book.repository.member.MemberRepository;
+import market.book.repository.seller.SellerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -25,14 +26,16 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
+    private final SellerRepository sellerRepository;
     private final FileStore fileStore;
     /**
      * 책 등록
      */
     @Transactional
     public void create(Long memberId, ItemSaveDto itemSaveDto) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException("사용자를 찾을 수 없습니다"));
+        // 판매자 등록 확인
+        Member member = memberRepository.findFetchSellerById(memberId) // 페치 조인으로 가져오기
+                .orElseThrow(() -> new BusinessException("존재 하지 않은 회원 또는 판매자 등록을하지 않은 회원"));
 
         Item item = new Item(itemSaveDto.getIsbn(),
                 itemSaveDto.getName(),
@@ -40,7 +43,8 @@ public class ItemService {
                 itemSaveDto.getAuthor(),
                 itemSaveDto.getContents(),
                 itemSaveDto.getQuantity(),
-                itemSaveDto.getPrice());
+                itemSaveDto.getPrice(),
+                member.getSeller()); // 판매자 등록
 
         // 메인 이미지 등록
         if(!ObjectUtils.isEmpty(itemSaveDto.getMainImage())) {
