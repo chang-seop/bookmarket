@@ -43,19 +43,19 @@ public class AdminController {
      * 판매자 등록 관리 (권한 부여)
      */
     @GetMapping("/sellers")
-    public String sellerView(@PageableDefault(page = 0, size = 20) Pageable pageable,
+    public String sellerRoleView(@PageableDefault(page = 0, size = 20) Pageable pageable,
                              Model model) {
         Page<AdminMemberManageDto> list = memberQueryRepository.findPageMemberInnerSeller(pageable);
 
         model.addAttribute("list", list);
-        return "admin/seller";
+        return "admin/sellerRole";
     }
 
     /**
      * 판매자 등록 detail 조회
      */
     @GetMapping("/sellers/{memberId}")
-    public String sellerMemberView(@PathVariable Long memberId,
+    public String sellerRoleDetailView(@PathVariable Long memberId,
                                    Model model) {
         Member member = memberRepository.findFetchSellerById(memberId)
                 .orElseThrow(() -> new BusinessException("회원이 존재하지 않습니다"));
@@ -71,7 +71,7 @@ public class AdminController {
                 .build();
 
         model.addAttribute("sellerInfo", sellerInfo);
-        return "admin/sellerDetail";
+        return "admin/sellerRoleDetail";
     }
 
     /**
