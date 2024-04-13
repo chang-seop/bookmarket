@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>판매자 정보 수정</title>
+</head>
+<body>
+
+<section>
+    <form id="modifySellerForm" name="modifySellerForm" method="post" th:action="@{/sellers/modify}" th:object="${sellerModifyDto}">
+        <div class="container">
+            <div class="card p-3 my-2 bg-light border">
+                <h1>판매자 정보 수정</h1>
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                </div>
+
+                <label for="email">이메일</label>
+                <input class="form-control my-2" type="text" title="이메일 입력" placeholder="이메일" id="email" name="email" th:field="*{email}">
+                <div class="field-error" th:errors="*{email}"></div>
+
+                <th:block layout:fragment="script">
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+                            $(document).ready(function() {
+                                // 주소 다음 API 이용 (주소 입력)
+                                $('#searchAddress').click(function() {
+                                    new daum.Postcode({
+                                        oncomplete: function(data) {
+                                            // 팝업에서 검색결과 항목을 클릭했을 때 실행할 코드를 작성하는 부분
+                                            $('#zoneCode').val(data.zonecode);
+
+                                            // 도로명 주소
+                                            if(data.userSelectedType === 'R') {
+                                                if(data.buildingName === '') {
+                                                    $('#subAddress').val(data.roadAddress);
+                                                } else {
+                                                    $('#subAddress').val(data.roadAddress + " (" + data.buildingName + ")");
+                                                }
+                                            }
+                                            // 지번 주소
+                                            if(data.userSelectedType === 'J') {
+                                                $('#subAddress').val(data.jibunAddress);
+                                            }
+                                        }
+                                    }).open();
+                                });
+                            });
+                        /*]]>*/
+                    </script>
+                </th:block>
+
+                <label for="contact">연락처</label>
+                <input class="form-control my-2" type="text" title="연락처 입력" placeholder="연락처" id="contact" name="contact" th:field="*{contact}">
+                <div class="field-error" th:errors="*{contact}"></div>
+
+                <div class="btn btn-dark my-2" style="width: 10rem;" id="searchAddress">주소찾기</div>
+
+                <label for="zoneCode">우편번호</label>
+                <input class="form-control my-2 w-50" type="text" title="우편번호 입력" placeholder="우편번호" id="zoneCode" name="zoneCode" th:field="*{zoneCode}">
+                <div class="field-error" th:errors="*{zoneCode}"></div>
+
+                <label for="subAddress">주소</label>
+                <input class="form-control my-2" type="text" title="주소 입력" placeholder="주소" id="subAddress" name="subAddress" th:field="*{subAddress}">
+                <div class="field-error" th:errors="*{subAddress}"></div>
+
+                <label for="detailedAddress">상세주소</label>
+                <input class="form-control my-2" type="text" title="상세주소 입력" placeholder="상세주소" id="detailedAddress" name="detailedAddress" th:field="*{detailedAddress}">
+                <div class="field-error" th:errors="*{detailedAddress}"></div>
+
+                <button class="btn btn-dark my-2" type="submit">수정</button>
+            </div>
+        </div>
+    </form>
+</section>
+
+</body>
+</html>

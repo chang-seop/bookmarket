@@ -4,12 +4,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import market.book.common.exception.BusinessException;
 import market.book.common.file.FileStore;
+import market.book.dto.item.ItemModifyDto;
 import market.book.dto.item.ItemSaveDto;
 import market.book.dto.member.MemberDetailsDto;
 import market.book.dto.seller.SellerModifyDto;
 import market.book.dto.seller.SellerMyItemDto;
 import market.book.dto.seller.SellerSaveDto;
 import market.book.entity.Member;
+import market.book.entity.Seller;
 import market.book.repository.item.ItemQueryRepository;
 import market.book.repository.member.MemberRepository;
 import market.book.service.ItemService;
@@ -23,10 +25,8 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -39,6 +39,7 @@ public class SellerController {
     private final FileStore fileStore;
     private final ItemService itemService;
     private final ItemQueryRepository itemQueryRepository;
+
     /**
      * 판매자 등록 폼
      */
@@ -84,13 +85,73 @@ public class SellerController {
 
         return "seller/main";
     }
-
     /**
-     * 수정 폼
+     * 판매자 수정 폼
      */
     @GetMapping("/modify")
-    public String modifyView(@ModelAttribute SellerModifyDto sellerModifyDto) {
+    public String modifyView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                             Model model) {
+        Member member  = memberRepository.findFetchSellerById(memberDetailsDto.getMemberId())
+                .orElseThrow(() -> new BusinessException("판매자 등록이 되지 않았습니다"));
+        Seller seller = member.getSeller();
+
+        SellerModifyDto sellerModifyDto = SellerModifyDto.builder()
+                .email(seller.getEmail())
+                .contact(seller.getContact())
+                .zoneCode(seller.getAddress().getZoneCode())
+                .subAddress(seller.getAddress().getSubAddress())
+                .detailedAddress(seller.getAddress().getDetailedAddress())
+                .build();
+
+        model.addAttribute("sellerModifyDto", sellerModifyDto);
         return "seller/modify";
+    }
+
+    /**
+     * 판매자 수정
+     */
+    @PostMapping("/modify")
+    public String modify(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                         @Valid @ModelAttribute SellerModifyDto sellerModifyDto,
+                         BindingResult bindingResult,
+                         Errors errors) {
+        if(bindingResult.hasErrors()) {
+            return "seller/modify";
+        }
+
+        try {
+            sellerService.modify(memberDetailsDto.getMemberId(), sellerModifyDto);
+        } catch (BusinessException e) {
+            errors.reject("error", e.getMessage());
+            return "seller/modify";
+        }
+
+        return "redirect:/sellers/main";
+    }
+
+    /**
+     * 판매자 상품 수정 폼
+     */
+    @GetMapping("/items/{itemId}/modify")
+    public String itemModifyView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                                 @PathVariable Long itemId,
+                                 @ModelAttribute ItemModifyDto itemModifyDto) {
+        itemService.modify(memberDetailsDto.getMemberId(), itemId, itemModifyDto);
+        return "seller/itemModify";
+    }
+
+    /**
+     * 판매자 상품 수정
+     */
+    @PostMapping("/items/{itemId}/modify")
+    public String itemModify(@PathVariable Long itemId,
+                             @AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
+                             @Valid @ModelAttribute SellerModifyDto sellerModifyDto,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addAttribute("itemId", itemId);
+        return "redirect:/items/{itemId}";
     }
 
     /**
@@ -107,11 +168,17 @@ public class SellerController {
         return "seller/item";
     }
 
+    /**
+     * 판매자 아이템 등록 폼
+     */
     @GetMapping("/items/add")
     public String addView(@ModelAttribute ItemSaveDto itemSaveDto) {
         return "seller/itemAdd";
     }
 
+    /**
+     * 판매자 아이템 등록
+     */
     @PostMapping("/items/add")
     public String add(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
                       @Valid @ModelAttribute ItemSaveDto itemSaveDto,
