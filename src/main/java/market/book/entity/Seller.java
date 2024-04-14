@@ -21,6 +21,17 @@ public class Seller extends BaseTimeEntity {
     @Embedded
     private Address address; // 회사 주소
 
+    @OneToOne(mappedBy = "seller")
+    private Member member;
+
+    /**
+     * * 사용 주의 *
+     * 연관관계 편의 메서드 용
+     */
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
     public Seller(String email, String contact, Address address) {
         this.email = email;
         this.contact = contact;

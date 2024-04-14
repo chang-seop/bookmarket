@@ -25,17 +25,21 @@
                                 <th>수량</th>
                                 <th>가격</th>
                                 <th>책 등록일</th>
+                                <th>수정</th>
+                                <th>삭제</th>
                             </tr>
                             </thead>
                             <tbody>
                             <th:block th:each="item : ${list}">
-                                <tr class="itemInfo" style="cursor: pointer;">
+                                <tr class="itemInfo">
                                     <input type="hidden" th:value="${item.id}">
                                     <td><span class="id" th:text="${item.id}"></span></td>
                                     <td><span class="name" th:text="${item.name}"></span></td>
                                     <td><span class="quantity" th:text="${item.quantity}"></span></td>
                                     <td><span class="price" name="" th:text="${item.price}"></span></td>
                                     <td><span class="createdDate" th:text="${#temporals.format(item.createdDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></td>
+                                    <td><a class="btn btn-dark mx-2" th:href="@{/sellers/items/{param}/modify(param=${item.id})}">수정</a></td>
+                                    <td><a class="btn btn-dark mx-2" th:href="@{/sellers/items/{param}/delete(param=${item.id})}">삭제</a></td>
                                 </tr>
                             </th:block>
                             </tbody>

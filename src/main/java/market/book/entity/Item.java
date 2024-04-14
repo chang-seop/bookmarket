@@ -47,4 +47,32 @@ public class Item extends BaseTimeEntity {
         this.itemPhotoList.add(itemPhoto);
         itemPhoto.setItem(this);
     }
+
+    public void changeIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public void changeAuthor(String author) {
+        this.author = author;
+    }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
+    }
+
+    public void changeQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void changePrice(Integer price) {
+        this.price = price;
+    }
 }

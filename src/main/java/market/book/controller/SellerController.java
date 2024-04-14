@@ -13,6 +13,7 @@ import market.book.dto.seller.SellerSaveDto;
 import market.book.entity.Member;
 import market.book.entity.Seller;
 import market.book.repository.item.ItemQueryRepository;
+import market.book.repository.item.ItemRepository;
 import market.book.repository.member.MemberRepository;
 import market.book.service.ItemService;
 import market.book.service.SellerService;
@@ -26,6 +27,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -39,6 +41,7 @@ public class SellerController {
     private final FileStore fileStore;
     private final ItemService itemService;
     private final ItemQueryRepository itemQueryRepository;
+    private final ItemRepository itemRepository;
 
     /**
      * 판매자 등록 폼
@@ -113,8 +116,7 @@ public class SellerController {
     @PostMapping("/modify")
     public String modify(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
                          @Valid @ModelAttribute SellerModifyDto sellerModifyDto,
-                         BindingResult bindingResult,
-                         Errors errors) {
+                         BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "seller/modify";
         }
@@ -122,7 +124,7 @@ public class SellerController {
         try {
             sellerService.modify(memberDetailsDto.getMemberId(), sellerModifyDto);
         } catch (BusinessException e) {
-            errors.reject("error", e.getMessage());
+            bindingResult.reject("error", e.getMessage());
             return "seller/modify";
         }
 
@@ -135,8 +137,11 @@ public class SellerController {
     @GetMapping("/items/{itemId}/modify")
     public String itemModifyView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
                                  @PathVariable Long itemId,
-                                 @ModelAttribute ItemModifyDto itemModifyDto) {
-        itemService.modify(memberDetailsDto.getMemberId(), itemId, itemModifyDto);
+                                 Model model) {
+        ItemModifyDto itemModifyDto = itemService.findItemModifyDto(memberDetailsDto.getMemberId(), itemId);
+
+        model.addAttribute("itemModifyDto", itemModifyDto);
+        model.addAttribute("itemId", itemId);
         return "seller/itemModify";
     }
 
@@ -146,9 +151,28 @@ public class SellerController {
     @PostMapping("/items/{itemId}/modify")
     public String itemModify(@PathVariable Long itemId,
                              @AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
-                             @Valid @ModelAttribute SellerModifyDto sellerModifyDto,
+                             @Valid @ModelAttribute ItemModifyDto itemModifyDto,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) {
+
+        if(bindingResult.hasErrors()) {
+            return "seller/itemModify";
+        }
+
+        if(!fileStore.isImageFile(itemModifyDto.getMainImage())) {
+            bindingResult.reject("isNotImage", "메인 이미지 파일은 jpg, png, gif 만 가능합니다");
+            return "seller/itemModify";
+        }
+
+        for (MultipartFile multipartFile : itemModifyDto.getSubImage()) {
+            if(!fileStore.isImageFile(multipartFile)) {
+                bindingResult.reject("isNotImage", "서브 이미지 파일은 jpg, png, gif 만 가능합니다");
+                return "seller/itemModify";
+            }
+        }
+
+
+        itemService.modify(memberDetailsDto.getMemberId(), itemId, itemModifyDto);
 
         redirectAttributes.addAttribute("itemId", itemId);
         return "redirect:/items/{itemId}";
@@ -182,22 +206,21 @@ public class SellerController {
     @PostMapping("/items/add")
     public String add(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
                       @Valid @ModelAttribute ItemSaveDto itemSaveDto,
-                      BindingResult bindingResult,
-                      Errors errors) {
+                      BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             return "seller/itemAdd";
         }
 
         if(!ObjectUtils.isEmpty(itemSaveDto.getMainImage())) {
             if(!fileStore.isImageFile(itemSaveDto.getMainImage())) {
-                errors.reject("addFail", "메인 이미지 파일은 jpg, png, gif 만 가능합니다");
+                bindingResult.reject("addFail", "메인 이미지 파일은 jpg, png, gif 만 가능합니다");
             }
         }
 
         if(!ObjectUtils.isEmpty(itemSaveDto.getSubImage())) {
             itemSaveDto.getSubImage().forEach((imageFile) -> {
                 if(!fileStore.isImageFile(imageFile)) {
-                    errors.reject("addFail", "서브 이미지 파일은 jpg, png, gif 만 가능합니다");
+                    bindingResult.reject("addFail", "서브 이미지 파일은 jpg, png, gif 만 가능합니다");
                 }
             });
         }
@@ -205,7 +228,7 @@ public class SellerController {
         try{
             itemService.create(memberDetailsDto.getMemberId(), itemSaveDto);
         } catch(BusinessException e) {
-            errors.reject("addFail", e.getMessage());
+            bindingResult.reject("addFail", e.getMessage());
             return "seller/itemAdd";
         }
 

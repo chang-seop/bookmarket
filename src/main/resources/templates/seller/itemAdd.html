@@ -43,11 +43,11 @@
                 <div class="field-error" th:errors="*{price}"></div>
 
                 <label for="mainImage">메인 이미지</label>
-                <input class="form-control my-2" type="file" title="메인 이미지" placeholder="메인 이미지" id="mainImage" name="mainImage" th:field="*{mainImage}">
+                <input class="form-control my-2" type="file" title="메인 이미지" accept="image/gif, image/jpeg, image/png" placeholder="메인 이미지" id="mainImage" name="mainImage" th:field="*{mainImage}">
                 <div class="field-error" th:errors="*{mainImage}"></div>
 
                 <label for="subImage">서브 이미지</label>
-                <input class="form-control my-2" type="file" multiple="multiple" title="서브 이미지" placeholder="서브 이미지" id="subImage" name="subImage" th:field="*{subImage}">
+                <input class="form-control my-2" type="file" multiple="multiple" accept="image/gif, image/jpeg, image/png" title="서브 이미지" placeholder="서브 이미지" id="subImage" name="subImage" th:field="*{subImage}">
                 <div class="field-error" th:errors="*{subImage}"></div>
 
                 <button class="btn btn-dark my-2" type="submit">등록</button>

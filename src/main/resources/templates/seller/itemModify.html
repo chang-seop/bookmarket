@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 수정</title>
+</head>
+<body>
+
+<section>
+    <form id="modifyItemForm" name="modifyItemForm" method="post" enctype="multipart/form-data" th:action="@{/sellers/items/{param}/modify(param=${itemId})}" th:object="${itemModifyDto}">
+        <div class="container">
+            <div class="card p-3 my-2 bg-light border">
+                <h1>상품 수정</h1>
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                </div>
+
+                <label for="isbn">isbn</label>
+                <input class="form-control my-2" type="text" title="isbn" placeholder="isbn" id="isbn" name="isbn" th:field="*{isbn}">
+                <div class="field-error" th:errors="*{isbn}"></div>
+
+                <label for="name">책 이름</label>
+                <input class="form-control my-2" type="text" title="이름" placeholder="책 이름" id="name" name="name" th:field="*{name}">
+                <div class="field-error" th:errors="*{name}"></div>
+
+                <label for="introduction">책 소개</label>
+                <input class="form-control my-2" type="text" title="소개" placeholder="책 소개" id="introduction" name="introduction" th:field="*{introduction}">
+                <div class="field-error" th:errors="*{introduction}"></div>
+
+                <label for="author">저자</label>
+                <input class="form-control my-2" type="text" title="저자" placeholder="저자" id="author" name="author" th:field="*{author}">
+                <div class="field-error" th:errors="*{author}"></div>
+
+                <label for="contents">목차</label>
+                <input class="form-control my-2" type="text" title="목차" placeholder="목차" id="contents" name="contents" th:field="*{contents}">
+                <div class="field-error" th:errors="*{contents}"></div>
+
+                <label for="quantity">재고 수량</label>
+                <input class="form-control my-2" style="width: 20rem;" type="text" title="재고 수량" placeholder="재고 수량" id="quantity" name="quantity" th:field="*{quantity}">
+                <div class="field-error" th:errors="*{quantity}"></div>
+
+                <label for="price">가격</label>
+                <input class="form-control my-2" style="width: 20rem;" type="text" title="가격" placeholder="가격" id="price" name="price" th:field="*{price}">
+                <div class="field-error" th:errors="*{price}"></div>
+
+                <th:block layout:fragment="script">
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+                            $(document).ready(function() {
+                                // 메인 이미지, 서브 이미지 버튼 클릭시 삭제
+                                $('.mainImageBtn, .subImageBtn').click(function() {
+                                    $(this).remove();
+                                });
+
+                                // 메인 이미지, 서브 이미지 hover 시에 삭제 아이콘 뜨게 하기
+                                $('.mainImageBtn, .subImageBtn').hover(function() {
+                                    // mouse over
+                                    $(this).children('img').hide();
+                                    $(this).children('svg').show();
+                                }, function() {
+                                    // mouse leave
+                                    $(this).children('img').show();
+                                    $(this).children('svg').hide();
+                                });
+                            });
+                        /*]]>*/
+                    </script>
+                </th:block>
+                <!-- 등록된 메인 이미지-->
+                <div th:if="*{mainImageUrl != null}" class="mainImageBtn my-2 mx-2" style="width: 200px; height:200px; overflow:hidden; cursor:pointer;">
+                    <img style="width: 100%; height: 100%; object-fit: cover;" th:src="|/items/images/*{mainImageUrl}|"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; object-fit: cover; display:none;" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                    <input type="hidden" name="mainImageUrl" id="mainImageUrl" th:value="*{mainImageUrl}">
+                </div>
+
+                <label for="mainImage">메인 이미지</label>
+                <input class="form-control my-2" type="file" title="메인 이미지" accept="image/gif, image/jpeg, image/png" placeholder="메인 이미지" id="mainImage" name="mainImage" th:field="*{mainImage}">
+                <div class="field-error" th:errors="*{mainImage}"></div>
+
+                <!-- 등록된 서브 이미지 -->
+                <div class="d-flex justify-content-start">
+                    <div th:each="subImageUrl : *{subImageUrls}" class="subImageBtn my-2 mx-2" style="width: 200px; height:200px; overflow: hidden; cursor:pointer;">
+                        <img style="width: 100%; height: 100%; object-fit: cover;" th:src="|/items/images/${subImageUrl}|"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%; object-fit: cover; display:none;" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                        <input type="hidden" name="subImageUrls" th:value="${subImageUrl}">
+                    </div>
+                </div>
+
+                <label for="subImage">서브 이미지</label>
+                <input class="form-control my-2" type="file" multiple="multiple" accept="image/gif, image/jpeg, image/png" title="서브 이미지" placeholder="서브 이미지" id="subImage" name="subImage" th:field="*{subImage}">
+                <div class="field-error" th:errors="*{subImage}"></div>
+
+                <button class="btn btn-dark my-2" type="submit">수정</button>
+            </div>
+        </div>
+    </form>
+</section>
+
+</body>
+</html>

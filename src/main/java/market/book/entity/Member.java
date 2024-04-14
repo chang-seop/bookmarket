@@ -50,10 +50,11 @@ public class Member extends BaseTimeEntity {
     }
 
     /**
-     * * 사용 주의 *
+     * 연관관계 편의 메서드
      */
     public void setSeller(Seller seller) {
         this.seller = seller;
+        seller.setMember(this);
     }
 
     // 멤버가 authority 를 관리
