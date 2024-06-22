@@ -8,6 +8,7 @@ import market.book.common.file.FileStore;
 import market.book.dto.item.ItemMainDto;
 import market.book.dto.item.ItemSaveDto;
 import market.book.dto.member.MemberDetailsDto;
+import market.book.entity.Item;
 import market.book.entity.ItemPhoto;
 import market.book.repository.item.ItemPhotoRepository;
 import market.book.repository.item.ItemQueryRepository;
@@ -50,8 +51,12 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public String detailView(@AuthenticationPrincipal MemberDetailsDto memberDetailsDto,
-                             @PathVariable Long itemId) {
+    public String detailView(@PathVariable Long itemId,
+                             Model model) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new BusinessException("찾을 수 없는 아이템"));
+
+        model.addAttribute("item", item);
         return "item/detail";
     }
 

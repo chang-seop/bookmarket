@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html th:replace="~{layouts/homeLayout :: homeLayout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>[[${item.name}]]</title>
+</head>
+<body>
+
+<section>
+    <div class="container">
+        <div class="d-flex justify-content-center card p-3 my-4 bg-light border">
+
+            <!-- 이미지 슬라이드 -->
+            <div id="carouselExampleIndicators" class="carousel slide w-25 h-25" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <th:block th:each="image, imageStat : ${item.itemPhotoList}">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" th:data-bs-slide-to="${imageStat.index}" class="active" aria-current="true" th:aria-label="|Slide ${imageStat.index}|"></button>
+                    </th:block>
+                </div>
+                <div class="carousel-inner">
+                    <th:block th:each="image : ${item.itemPhotoList}">
+                        <div class="carousel-item active" th:if="${image.imageMainYn == true}">
+                            <img class="d-block w-100" style="width: 100%; height: 100%; object-fit: cover;" th:src="|/items/images/${image.imageUrl}|"/>
+                        </div>
+                        <div class="carousel-item" th:if="${image.imageMainYn == false}">
+                            <img class="d-block w-100" style="width: 100%; height: 100%; object-fit: cover;" th:src="|/items/images/${image.imageUrl}|"/>
+                        </div>
+                    </th:block>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+            <label for="name">책 이름</label>
+            <input class="form-control my-2" type="text" title="이름" placeholder="책 이름" id="name" name="name" th:field="${item.name}" disabled>
+
+            <label for="isbn">isbn</label>
+            <input class="form-control my-2" type="text" title="isbn" placeholder="isbn" id="isbn" name="isbn" th:field="${item.isbn}" disabled>
+
+            <label for="introduction">책 소개</label>
+            <input class="form-control my-2" type="text" title="소개" placeholder="책 소개" id="introduction" name="introduction" th:field="${item.introduction}" disabled>
+
+            <label for="author">저자</label>
+            <input class="form-control my-2" type="text" title="저자" placeholder="저자" id="author" name="author" th:field="${item.author}" disabled>
+
+            <label for="contents">목차</label>
+            <input class="form-control my-2" type="text" title="목차" placeholder="목차" id="contents" name="contents" th:field="${item.contents}" disabled>
+
+            <label for="quantity">재고 수량</label>
+            <input class="form-control my-2" style="width: 20rem;" type="text" title="재고 수량" placeholder="재고 수량" id="quantity" name="quantity" th:field="${item.quantity}" disabled>
+
+            <label for="price">가격</label>
+            <input class="form-control my-2" style="width: 20rem;" type="text" title="가격" placeholder="가격" id="price" name="price" th:field="${item.price}" disabled>
+        </div>
+        <!-- TODO: 주문하기 -->
+        <!-- TODO: 장바구니 -->
+    </div>
+</section>
+
+</body>
+</html>
